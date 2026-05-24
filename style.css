@@ -1,0 +1,68 @@
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+.card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.4);
+  color: white;
+}
+
+.card img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.size-options {
+    display: none;
+    margin-top: 10px;
+}
+
+.size-card {
+    background: #111;
+    border: 1px solid #c47a2c;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.size-card:hover {
+    transform: translateY(-2px);
+}
+.size-card {
+    display: block;
+    text-decoration: none;
+    color: white;
+    background: #111;
+    border: 1px solid #c47a2c;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.size-card:hover {
+    transform: translateY(-2px);
+}
+
+.card {
+    display: flex;             /* Membuat gambar dan teks berjejer horizontal */
+    align-items: center;        /* Menyejajarkan gambar dan teks di tengah secara vertikal */
+    text-decoration: none;
+    color: inherit;
+    
+    padding: 25px;             /* Memberikan ruang di dalam kotak kartu */
+    margin-bottom: 5px;       /* Ini yang menambahkan jarak antar-menu (atas ke bawah) */
+    
+    /* Opsional: Jika Anda ingin kartu menu memiliki transisi halus saat disentuh/hover */
+    transition: 0.3s; 
+}
