@@ -131,67 +131,111 @@ footer{
 
 <body>
 
-
 <div class="hero">
   <h1>De Rumah Cokelat Inspired Menu</h1>
   <p>Warm • Cozy • Premium Taste Experience</p>
 </div>
 
+<div class="container">
   <div id="food" class="menu-section active">
-<a class="card"
-   href="https://wa.me/628117269594?text=Halo,%20saya%20ingin%20pesan%20Brownies%20Mini"
-   target="_blank">
 
-    <img src="brownies.png" alt="Brownies">
-
-    <div class="info">
-        <h3>Brownies Mini</h3>
-        <p>Rp 2.000</p>
-    </div>
-  </a>
-     <a class="card" href="https://wa.me/628117269594?text=Halo..." target="_blank">
-        <img src="pizza.png" alt="Pizza">
-        <div class="info">
-            <h3>Mini Pizza</h3>
-            <p>Rp 2.000</p>
+    <div class="card-menu-new" onclick="toggleMenuMini()" style="cursor: pointer;">
+      <div class="menu-info-left">
+        <img src="brownies.png" alt="Brownies Mini">
+        <div class="info-text">
+          <h3>Brownies Mini</h3>
+          <p style="color: #ff9f43; font-weight: bold;">Klik untuk memesan <i class="fas fa-chevron-down" id="icon-mini"></i></p>
         </div>
-    </a> <div class="card" onclick="toggleSizes()">
-        <img src="browniess.png" alt="Brownies">
-        <div class="info">
-            <h3>Brownies Reguler</h3>
-            <p>Click to choose size</p>
+      </div>
+    </div>
+
+    <div id="container-mini" class="hidden-sizes">
+      <div class="size-box-card">
+        <div class="size-text-left">
+          <h3>Pesan</h3>
+          <p>Rp 2.000</p>
         </div>
+        <form id="form-brownies-mini" class="form-order-vertical">
+          <input type="text" class="input-nama" placeholder="Nama Anda" required>
+          <input type="number" class="input-jumlah" placeholder="Jumlah" required>
+          <button type="submit" class="btn-kirim">Kirim Pesanan</button>
+        </form>
+      </div>
     </div>
-<div id="sizeOptions" class="size-options">
 
-    <a class="size-card"
-       href="https://wa.me/628117269594?text=Halo,%20saya%20ingin%20pesan%20Brownies%20Reguler%20Ukuran%20Small"
-       target="_blank">
-        <h4>Small</h4>
-        <p>Rp 30.000</p>
-    </a>
-
-    <a class="size-card"
-       href="https://wa.me/628117269594?text=Halo,%20saya%20ingin%20pesan%20Brownies%20Reguler%20Ukuran%20Medium"
-       target="_blank">
-        <h4>Medium</h4>
-        <p>Rp 40.000</p>
-    </a>
-
-    <a class="size-card"
-       href="https://wa.me/628117269594?text=Halo,%20saya%20ingin%20pesan%20Brownies%20Reguler%20Ukuran%20Large"
-       target="_blank">
-        <h4>Large</h4>
-        <p>Rp 55.000</p>
-    </a>
-
-</div>
+    <div class="card-menu-new" onclick="toggleMenuPizza()" style="cursor: pointer;">
+      <div class="menu-info-left">
+        <img src="pizza.png" alt="Mini Pizza">
+        <div class="info-text">
+          <h3>Mini Pizza</h3>
+          <p style="color: #ff9f43; font-weight: bold;">Klik untuk memesan <i class="fas fa-chevron-down" id="icon-pizza"></i></p>
+        </div>
+      </div>
     </div>
-  </div>
 
-</div>
+    <div id="container-pizza" class="hidden-sizes">
+      <div class="size-box-card">
+        <div class="size-text-left">
+          <h3>Pesan</h3>
+          <p>Rp 2.000</p>
+        </div>
+        <form id="form-mini-pizza" class="form-order-vertical">
+          <input type="text" class="input-nama" placeholder="Nama Anda" required>
+          <input type="number" class="input-jumlah" placeholder="Jumlah" required>
+          <button type="submit" class="btn-kirim">Kirim Pesanan</button>
+        </form>
+      </div>
+    </div>
 
-<footer>
+    <div class="card-menu-new" onclick="toggleUkuran()" style="cursor: pointer;">
+      <div class="menu-info-left">
+        <img src="browniess.png" alt="Brownies Reguler">
+        <div class="info-text">
+          <h3>Brownies Reguler</h3>
+          <p>Klik untuk memilih ukuran <i class="fas fa-chevron-down" id="icon-panah"></i></p>
+        </div>
+      </div> 
+    </div>
+
+    <div id="container-ukuran" class="hidden-sizes">
+      
+      <div class="size-box-card">
+        <div class="size-text-left">
+          <h3>Small</h3>
+          <p>Rp 30.000</p>
+        </div>
+        <form id="form-brownies-small" class="form-order-vertical">
+          <input type="text" class="input-nama" placeholder="Nama Anda" required>
+          <input type="number" class="input-jumlah" placeholder="Jumlah" required>
+          <button type="submit" class="btn-kirim">Order Small</button>
+        </form>
+      </div>
+
+      <div class="size-box-card">
+        <div class="size-text-left">
+          <h3>Medium</h3>
+          <p>Rp 40.000</p>
+        </div>
+        <form id="form-brownies-medium" class="form-order-vertical">
+          <input type="text" class="input-nama" placeholder="Nama Anda" required>
+          <input type="number" class="input-jumlah" placeholder="Jumlah" required>
+          <button type="submit" class="btn-kirim">Order Medium</button>
+        </form>
+      </div>
+
+      <div class="size-box-card">
+        <div class="size-text-left">
+          <h3>Large</h3>
+          <p>Rp 50.000</p>
+        </div>
+        <form id="form-brownies-large" class="form-order-vertical">
+          <input type="text" class="input-nama" placeholder="Nama Anda" required>
+          <input type="number" class="input-jumlah" placeholder="Jumlah" required>
+          <button type="submit" class="btn-kirim">Order Large</button>
+        </form>
+      </div>
+
+    </div> </div> </div> <footer>
   © 2026 Chocolate Menu Theme
 </footer>
 
@@ -202,16 +246,106 @@ function showMenu(id){
 }
 </script>
 
-<script>
-function toggleSizes() {
-    const sizes = document.getElementById("sizeOptions");
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    if (sizes.style.display === "block") {
-        sizes.style.display = "none";
-    } else {
-        sizes.style.display = "block";
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdig7gTvPCRHic6L9kGJFFMh4Li8apn3s",
+    authDomain: "derumahcokelat-3b51e.firebaseapp.com",
+    projectId: "derumahcokelat-3b51e",
+    storageBucket: "derumahcokelat-3b51e.firebasestorage.app",
+    messagingSenderId: "893799280902",
+    appId: "1:893799280902:web:0555619ea36dc39eaaee87",
+    measurementId: "G-BXQSLKMDGK"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Fungsi Toggle Klik Buka-Tutup Menu
+  window.toggleMenuMini = function() {
+    const container = document.getElementById('container-mini');
+    const icon = document.getElementById('icon-mini');
+    if (container) container.classList.toggle('show');
+    if (icon) icon.classList.toggle('rotate');
+  };
+
+  window.toggleMenuPizza = function() {
+    const container = document.getElementById('container-pizza');
+    const icon = document.getElementById('icon-pizza');
+    if (container) container.classList.toggle('show');
+    if (icon) icon.classList.toggle('rotate');
+  };
+
+  window.toggleUkuran = function() {
+    const container = document.getElementById('container-ukuran');
+    const iconPanah = document.getElementById('icon-panah');
+    if (container) container.classList.toggle('show');
+    if (iconPanah) iconPanah.classList.toggle('rotate');
+  };
+
+  // Fungsi Kirim Data ke Firebase Firestore
+  async function kirimKeFirebase(formElement, namaProduk) {
+    const nama = formElement.querySelector('.input-nama').value;
+    const jumlah = formElement.querySelector('.input-jumlah').value;
+
+    try {
+      await addDoc(collection(db, "pesanan"), {
+        namaPembeli: nama,
+        menuPesanan: namaProduk,
+        qty: parseInt(jumlah),
+        waktu: serverTimestamp()
+      });
+
+      alert(`Pesanan ${namaProduk} sukses terkirim!`);
+      formElement.reset();
+    } catch (error) {
+      console.error("Gagal mengirim data ke Firestore: ", error);
+      alert("Koneksi bermasalah, silakan coba lagi.");
     }
-}
+  }
+
+  // Mengaktifkan Listener Submit Form
+  const formBrowniesMini = document.getElementById('form-brownies-mini');
+  if (formBrowniesMini) {
+    formBrowniesMini.addEventListener('submit', (e) => {
+      e.preventDefault();
+      kirimKeFirebase(formBrowniesMini, "Brownies Mini");
+    });
+  }
+
+  const formMiniPizza = document.getElementById('form-mini-pizza');
+  if (formMiniPizza) {
+    formMiniPizza.addEventListener('submit', (e) => {
+      e.preventDefault();
+      kirimKeFirebase(formMiniPizza, "Mini Pizza");
+    });
+  }
+
+  const formSmall = document.getElementById('form-brownies-small');
+  if (formSmall) {
+    formSmall.addEventListener('submit', (e) => {
+      e.preventDefault();
+      kirimKeFirebase(formSmall, "Brownies Reguler (Small)");
+    });
+  }
+
+  const formMedium = document.getElementById('form-brownies-medium');
+  if (formMedium) {
+    formMedium.addEventListener('submit', (e) => {
+      e.preventDefault();
+      kirimKeFirebase(formMedium, "Brownies Reguler (Medium)");
+    });
+  }
+
+  const formLarge = document.getElementById('form-brownies-large');
+  if (formLarge) {
+    formLarge.addEventListener('submit', (e) => {
+      e.preventDefault();
+      kirimKeFirebase(formLarge, "Brownies Reguler (Large)");
+    });
+  }
 </script>
 
 </body>
