@@ -1,0 +1,180 @@
+/* ==========================================
+   1. GLOBAL & BACKGROUND STYLES
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    background-color: #121212; /* Warna dasar cadangan */
+}
+
+/* Membuat foto capture.png menjadi background dasar yang kabur */
+.bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('capture.png'); /* Memanggil gambar */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(5px); /* Mengatur tingkat blur */
+    transform: scale(1.05); /* Menghilangkan garis putih di ujung layar */
+    z-index: -1; /* Berada di balik teks dan tombol */
+}
+
+/* ==========================================
+   2. HEADER & NAVIGATION
+   ========================================== */
+header {
+    display: flex;
+    flex-direction: column;   /* Membuat tulisan otomatis menyusun ke bawah */
+    align-items: center;      /* Membuat semua elemen di dalamnya rata tengah secara horizontal */
+    justify-content: center;  /* Membuat konten rata tengah secara vertikal */
+    text-align: center;       /* Memastikan teks panjang melengkung rapi di tengah */
+    padding: 40px 20px;       /* Memberikan ruang atas dan bawah di dalam area ungu */
+}
+
+header h1 {
+    margin-bottom: 10px;      /* Memberikan sedikit jarak sebelum teks bawahnya */
+    font-size: 2.5rem;        /* Ukuran font judul */
+}
+
+header p {
+    margin: 0;
+    font-size: 1.1rem;        /* Ukuran font sub-judul */
+    opacity: 0.9;             /* Membuat teks deskripsi sedikit lebih lembut */
+}
+
+nav {
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #4a2c2a;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background: #6b3e26;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   3. MENU SECTION & CARDS
+   ========================================== */
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    display: flex;             /* Membuat gambar dan teks berjejer horizontal */
+    align-items: center;       /* Menyejajarkan gambar dan teks di tengah secara vertikal */
+    gap: 15px;
+    padding: 25px;             /* Memberikan ruang di dalam kotak kartu */
+    margin-bottom: 5px;        /* Menambahkan jarak antar-menu (atas ke bawah) */
+    border-radius: 12px;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s; 
+}
+
+.card img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.size-options {
+    display: none;
+    margin-top: 10px;
+}
+
+.size-card {
+    display: block;
+    text-decoration: none;
+    color: white;
+    background: #111;
+    border: 1px solid #c47a2c;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.size-card:hover {
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   4. BUTTON GROUP & TOMBOL COKELAT ANIMASI
+   ========================================== */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 20px;      /* Jarak renggang aman ke foto di bawahnya */
+    text-align: center;       /* Memastikan posisi tombol tetap rapi di tengah */
+}
+
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 50px;       /* Membuat bentuk tombol lonjong modern bulat */
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    transition: all 0.3s ease; /* Transisi smooth selama 0.3 detik */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    margin: 5px;
+}
+
+/* Pewarnaan Cokelat untuk masing-masing tombol */
+.btn-menu {
+    background: linear-gradient(135deg, #4A2C11, #2B1808); /* Dark Chocolate */
+}
+
+.btn-order {
+    background: linear-gradient(135deg, #7B3F00, #562B00); /* Milk Chocolate */
+}
+
+.btn-contact {
+    background: linear-gradient(135deg, #B07D62, #8D5B4C); /* Warm Caramel */
+}
+
+/* Efek saat Kursor Diatas Tombol (Hover) */
+.btn:hover {
+    transform: translateY(-3px);       /* Tombol sedikit terangkat ke atas */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Bayangan menjadi lebih tebal */
+    filter: brightness(1.15);          /* Warna tombol menjadi sedikit lebih cerah */
+}
+
+/* Efek saat Tombol Diklik (Active) */
+.btn:active {
+    transform: scale(0.95);            /* Efek membal mengecil sedikit saat ditekan */
+}
