@@ -4,23 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Derumah Cokelat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #2c1d11; color: #fff; padding: 20px; }
-    h1 { color: #ff9f43; border-bottom: 2px solid #4a3525; padding-bottom: 10px; }
-    .card-pesanan { background-color: #4a3525; padding: 15px; margin-bottom: 15px; border-radius: 8px; border-left: 5px solid #ff9f43; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h1 { color: #ff9f43; border-bottom: 2px solid #4a3525; padding-bottom: 10px; margin-bottom: 15px; }
+    
+    .btn-danger {
+      background-color: #e74c3c; color: white; border: none; padding: 10px 18px; border-radius: 6px;
+      font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 20px;
+      transition: background 0.2s, transform 0.1s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-danger:hover { background-color: #c0392b; }
+    .btn-danger:disabled { background-color: #7f8c8d; cursor: not-allowed; }
+
+    /* Desain Kartu Pesanan */
+    .card-pesanan { 
+      background-color: #4a3525; padding: 15px; margin-bottom: 15px; border-radius: 8px; 
+      border-left: 5px solid #ff9f43; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: relative; transition: 0.3s;
+    }
     .card-pesanan h3 { margin: 0 0 10px 0; color: #ff9f43; }
     .card-pesanan p { margin: 5px 0; }
     small { color: #ccc; }
+
+    /* Gaya Berdasarkan Status Pesanan */
+    .card-pesanan.accepted { border-left-color: #2ecc71; opacity: 0.9; }
+    .card-pesanan.declined { border-left-color: #95a5a6; opacity: 0.5; background-color: #3d2d1f; }
+
+    /* Kontainer Tombol Aksi di Pojok Kanan */
+    .action-buttons { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; }
+    
+    .btn-action {
+      border: none; padding: 8px 14px; border-radius: 6px; color: white; font-weight: bold;
+      cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; font-size: 13px;
+    }
+    .btn-acc { background-color: #2ecc71; }
+    .btn-acc:hover { background-color: #27ae60; }
+    .btn-dec { background-color: #e74c3c; }
+    .btn-dec:hover { background-color: #c0392b; }
+    
+    /* Badge Status */
+    .badge-status {
+      display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; 
+      font-weight: bold; text-transform: uppercase; margin-top: 8px;
+    }
+    .status-pending { background-color: #f1c40f; color: #2c1d11; }
+    .status-accepted { background-color: #2ecc71; color: white; }
+    .status-declined { background-color: #7f8c8d; color: white; }
   </style>
 </head>
 <body>
 
   <h1>Daftar Pesanan Masuk (Real-Time)</h1>
+  
+  <button id="btn-hapus-semua" class="btn-danger">
+    <i class="fas fa-trash-alt"></i> Hapus Semua Log Pesanan
+  </button>
+
   <div id="kontainer-pesanan">Membuka koneksi ke server pesanan...</div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, getDocs, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCdig7gTvPCRHic6L9kGJFFMh4Li8apn3s",
@@ -35,11 +80,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const kontainer = document.getElementById('kontainer-pesanan');
+    const btnHapusSemua = document.getElementById('btn-hapus-semua');
 
-    // Mengambil data pesanan terupdate
+    // 1. Ambil & Tampilkan data secara real-time
     const q = query(collection(db, "pesanan"), orderBy("waktu", "desc"));
 
-    // Menampilkan data secara real-time
     onSnapshot(q, (snapshot) => {
       kontainer.innerHTML = "";
 
@@ -48,19 +93,80 @@
         return;
       }
 
-      snapshot.forEach((doc) => {
-        const data = doc.data();
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const docId = docSnap.id;
+        
+        // Atur nilai default status jika belum terdefinisi
+        const status = data.status || "pending";
+
         const card = document.createElement('div');
-        card.className = 'card-pesanan';
-        card.innerHTML = `
+        card.className = `card-pesanan ${status}`;
+        
+        let cardContent = `
           <h3>Pelanggan: ${data.namaPembeli}</h3>
           <p><strong>Pesanan:</strong> ${data.menuPesanan}</p>
           <p><strong>Jumlah:</strong> ${data.qty} pcs</p>
           <small>Waktu Masuk: ${data.waktu ? new Date(data.waktu.toDate()).toLocaleString('id-ID') : 'Memproses waktu...'}</small>
+          <br><span class="badge-status status-${status}">${status}</span>
         `;
+
+        // Tampilkan tombol tindakan jikalau status pesanan masih "pending"
+        if (status === "pending") {
+          cardContent += `
+            <div class="action-buttons">
+              <button class="btn-action btn-acc" onclick="ubahStatusPesanan('${docId}', 'accepted')">
+                <i class="fas fa-check"></i> Acc
+              </button>
+              <button class="btn-action btn-dec" onclick="ubahStatusPesanan('${docId}', 'declined')">
+                <i class="fas fa-times"></i> X
+              </button>
+            </div>
+          `;
+        }
+
+        card.innerHTML = cardContent;
         kontainer.appendChild(card);
       });
     });
+
+    // 2. Fungsi Global untuk Mengubah Status Log Pesanan
+    window.ubahStatusPesanan = async function(idDokumen, statusBaru) {
+      try {
+        const docRef = doc(db, "pesanan", idDokumen);
+        await updateDoc(docRef, {
+          status: statusBaru
+        });
+      } catch (error) {
+        console.error("Gagal memperbarui status: ", error);
+        alert("Terjadi masalah sistem, gagal memproses aksi.");
+      }
+    };
+
+    // 3. Fungsi Hapus Massal Data Pesanan
+    if (btnHapusSemua) {
+      btnHapusSemua.addEventListener('click', async () => {
+        const konfirmasi = confirm("Apakah Anda yakin ingin MENGHAPUS SEMUA log pesanan? Tindakan ini tidak bisa dibatalkan!");
+        if (konfirmasi) {
+          try {
+            btnHapusSemua.innerText = "Memproses...";
+            btnHapusSemua.disabled = true;
+            const querySnapshot = await getDocs(collection(db, "pesanan"));
+            const deletePromises = [];
+            querySnapshot.forEach((docSnap) => {
+              deletePromises.push(deleteDoc(docSnap.ref));
+            });
+            await Promise.all(deletePromises);
+            alert("Semua log data pesanan berhasil dibersihkan!");
+          } catch (error) {
+            alert("Gagal menghapus data.");
+          } finally {
+            btnHapusSemua.innerHTML = `<i class="fas fa-trash-alt"></i> Hapus Semua Log Pesanan`;
+            btnHapusSemua.disabled = false;
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>

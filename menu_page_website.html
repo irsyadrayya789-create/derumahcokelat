@@ -6,6 +6,7 @@
 <title>Chocolate Menu</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
 *{
@@ -21,11 +22,11 @@ body{
 }
 
 /* HERO */
-.hero{
-  padding:60px 20px;
-  text-align:center;
+.hero {
+  padding: 60px 20px;
+  text-align: center;
   background: linear-gradient(135deg, rgba(200,155,106,0.15), rgba(0,0,0,0.4));
-  border-bottom:1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .hero h1{
@@ -36,32 +37,6 @@ body{
 .hero p{
   margin-top:10px;
   color:#c89b6a;
-}
-
-/* NAV */
-nav{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  padding:15px;
-  flex-wrap:wrap;
-}
-
-nav button{
-  background: rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  color:#fff;
-  padding:10px 16px;
-  border-radius:999px;
-  cursor:pointer;
-  transition:0.3s;
-  backdrop-filter: blur(10px);
-}
-
-nav button:hover{
-  background:#c89b6a;
-  color:#120b08;
-  transform: translateY(-2px);
 }
 
 /* CONTAINER */
@@ -83,35 +58,6 @@ nav button:hover{
 @keyframes fade{
   from{opacity:0; transform:translateY(10px);}
   to{opacity:1; transform:translateY(0);}
-}
-
-/* GRID CARDS */
-.grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap:15px;
-}
-
-.card{
-  background: rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  padding:15px;
-  border-radius:16px;
-  transition:0.3s;
-}
-
-.card:hover{
-  transform: translateY(-5px);
-  border-color:#c89b6a;
-}
-
-.card h3{
-  margin-bottom:5px;
-}
-
-.price{
-  color:#c89b6a;
-  font-weight:600;
 }
 
 footer{
@@ -235,20 +181,17 @@ footer{
         </form>
       </div>
 
-    </div> </div> </div> <footer>
+    </div> 
+  </div> 
+</div> 
+
+<footer>
   © 2026 Chocolate Menu Theme
 </footer>
 
-<script>
-function showMenu(id){
-  document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-</script>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, serverTimestamp, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdig7gTvPCRHic6L9kGJFFMh4Li8apn3s",
@@ -285,21 +228,59 @@ function showMenu(id){
     if (iconPanah) iconPanah.classList.toggle('rotate');
   };
 
-  // Fungsi Kirim Data ke Firebase Firestore
+  // Fungsi Kirim Data ke Firebase Firestore & Monitor Keputusan Admin
   async function kirimKeFirebase(formElement, namaProduk) {
     const nama = formElement.querySelector('.input-nama').value;
     const jumlah = formElement.querySelector('.input-jumlah').value;
+    const tombol = formElement.querySelector('.btn-kirim');
 
     try {
-      await addDoc(collection(db, "pesanan"), {
+      // 1. Kirim data ke database dengan menyertakan status awal 'pending'
+      const docRef = await addDoc(collection(db, "pesanan"), {
         namaPembeli: nama,
         menuPesanan: namaProduk,
         qty: parseInt(jumlah),
-        waktu: serverTimestamp()
+        waktu: serverTimestamp(),
+        status: "pending"
       });
 
-      alert(`Pesanan ${namaProduk} sukses terkirim!`);
+      // Kunci tombol agar pembeli tidak menekan berulang kali
+      const teksAsli = tombol.innerText;
+      tombol.innerText = "Menunggu Konfirmasi Admin...";
+      tombol.disabled = true;
+      tombol.style.backgroundColor = "#f1c40f";
+      tombol.style.color = "#000";
+
+      alert(`Pesanan ${namaProduk} berhasil dikirim! Silakan tunggu konfirmasi dari De Rumah Cokelat.`);
       formElement.reset();
+
+      // 2. Pasang Listener Real-time khusus memantau status dokumen pesanan ini
+      const unsub = onSnapshot(doc(db, "pesanan", docRef.id), (docSnap) => {
+        if (docSnap.exists()) {
+          const statusTerbaru = docSnap.data().status;
+
+          if (statusTerbaru === "accepted") {
+            alert(`🎉 KABAR BAIK!\nPesanan "${namaProduk}" atas nama ${nama} telah DITERIMA oleh De Rumah Cokelat. Pesanan Anda kini sedang diproses.`);
+            
+            // Kembalikan tombol ke keadaan normal
+            tombol.innerText = teksAsli;
+            tombol.disabled = false;
+            tombol.style.backgroundColor = "";
+            tombol.style.color = "";
+            unsub(); // Hentikan listener setelah selesai
+          } 
+          else if (statusTerbaru === "declined") {
+            alert(`🙏 MOHON MAAF...\nPesanan "${namaProduk}" atas nama ${nama} DITOLAK oleh admin De Rumah Cokelat karena keterbatasan stok atau toko sedang overload.`);
+            
+            tombol.innerText = teksAsli;
+            tombol.disabled = false;
+            tombol.style.backgroundColor = "";
+            tombol.style.color = "";
+            unsub(); // Hentikan listener setelah selesai
+          }
+        }
+      });
+
     } catch (error) {
       console.error("Gagal mengirim data ke Firestore: ", error);
       alert("Koneksi bermasalah, silakan coba lagi.");
